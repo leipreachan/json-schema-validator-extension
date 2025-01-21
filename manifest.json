@@ -1,0 +1,22 @@
+{
+    "manifest_version": 2,
+    "name": "JSON Schema Validator",
+    "version": "1.0",
+    "description": "Validates selected text against a predefined JSON schema",
+    "permissions": ["activeTab"],
+    "background": {
+      "scripts": ["background.js"],
+      "persistent": false
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://github.com"],
+        "js": ["content.js"]
+      }
+    ],
+    "options_ui": {
+        "page": "options.html",
+        "browser_style": true
+      }
+  }
+  
