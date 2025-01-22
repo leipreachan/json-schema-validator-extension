@@ -1,2 +1,5 @@
 node_modules
+web-ext-artifacts
 .env*
+.amo-upload-uuid
+.web-extension-id
