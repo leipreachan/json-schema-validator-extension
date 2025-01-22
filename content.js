@@ -1,3 +1,5 @@
+const jsonContainerLocator = '.highlight-source-json, [value="builderTemplateInline"] ~ textarea';
+
 function addCss() {
   const linkElem = document.createElement('link');
   linkElem.setAttribute('rel', 'stylesheet');
@@ -5,24 +7,27 @@ function addCss() {
   document.body.append(linkElem);
 }
 
-function addValidationButtons() {
-  const jsonElements = document.querySelectorAll('.highlight-source-json');
-  jsonElements.forEach((element, index) => {
-    className = 'json-validate-btn';
-    id = `${className}-${index}`;
-    if (document.getElementById(id) == null) {
-      const button = document.createElement('button');
-      button.setAttribute('id', id);
-      button.textContent = 'Validate JSON';
-      button.className = className;
-      button.dataset.index = index;
-      element.parentNode.insertBefore(button, element);
+function addValidationButton(element, index) {
+  className = 'json-validate-btn';
+  id = `${className}-${index}`;
+  if (document.getElementById(id) == null) {
+    const button = document.createElement('button');
+    button.setAttribute('id', id);
+    button.textContent = 'Validate JSON';
+    button.className = className;
+    button.dataset.index = index;
+    element.parentNode.insertBefore(button, element);
 
-      const validationMessage = document.createElement('div');
-      validationMessage.className = 'json-validation-message'
-      validationMessage.dataset.index = index;
-      element.parentNode.insertBefore(validationMessage, element);
-    }
+    const validationMessage = document.createElement('div');
+    validationMessage.className = 'json-validation-message'
+    validationMessage.dataset.index = index;
+    element.parentNode.insertBefore(validationMessage, element);
+  }
+}
+
+function addValidationButtons() {
+  document.querySelectorAll(jsonContainerLocator).forEach((element, index) => {
+    addValidationButton(element, index);
   });
 }
 
@@ -32,9 +37,11 @@ function validateJSON(text, index) {
 
 document.addEventListener('click', (event) => {
   if (event.target.classList.contains('json-validate-btn')) {
+    event.preventDefault();
     const index = event.target.dataset.index;
-    const jsonElement = document.querySelectorAll('.highlight-source-json')[index];
-    const jsonText = jsonElement.textContent;
+    const jsonElement = document.querySelectorAll(jsonContainerLocator)[index];
+    const tagName = jsonElement.tagName;
+    const jsonText = (tagName == 'TEXTAREA' || tagName == 'INPUT') ? jsonElement.value : jsonElement.textContent;
     validateJSON(jsonText, index);
   }
 });

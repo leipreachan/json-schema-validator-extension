@@ -17,12 +17,15 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
       try {
         const schema = JSON.parse(schemaContent)
-        console.log(schema);
+        console.log("schema", schema);
         // const jsonData = JSON.parse(message.text);
         const jsonData = message.text;
-        console.log(jsonData);
+        console.log("data", jsonData);
         if (!parser) {
           throw new Error("'schemaSafe' is not loaded yet");
+        }
+        if (jsonData.length == 0 || Object.keys(JSON.parse(jsonData)).length == 0) {
+          throw new Error("Empty JSON");
         }
         // https://github.com/ExodusMovement/schemasafe
         const parse = parser(schema, {
