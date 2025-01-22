@@ -4,7 +4,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "validateJSON") {
     browser.storage.local.get(preferenceName).then((res) => {
       const schemaContent = res[preferenceName];
-      
+
       if (!schemaContent) {
         browser.tabs.sendMessage(sender.tab.id, {
           action: "validationResult",
@@ -49,7 +49,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
           index: message.index
         });
       }
-        
+
     });
     return true;
   }
