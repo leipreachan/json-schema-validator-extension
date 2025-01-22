@@ -1,5 +1,3 @@
-// https://cdnjs.com/libraries/ajv
-// https://unpkg.com/@exodus/schemasafe@1.3.0/src/index.js
 const preferenceName = "schemaValue";
 
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -19,12 +17,20 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
       try {
         const schema = JSON.parse(schemaContent)
-        const jsonData = JSON.parse(message.text);
-        if (!schemaSafe) {
+        console.log(schema);
+        // const jsonData = JSON.parse(message.text);
+        const jsonData = message.text;
+        console.log(jsonData);
+        if (!parser) {
           throw new Error("'schemaSafe' is not loaded yet");
         }
-        const validate = schemaSafe.validator(schema, { includeErrors: true });
-        const valid = validate(jsonData);
+        // https://github.com/ExodusMovement/schemasafe
+        const parse = parser(schema, {
+          mode: 'spec',
+          includeErrors: true,
+          allErrors: true
+        });
+        const valid = parse(jsonData);
 
         browser.tabs.sendMessage(sender.tab.id, {
           action: "validationResult",
