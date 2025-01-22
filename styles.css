@@ -1,0 +1,15 @@
+.json-validate-btn {
+    margin-bottom: 5px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  .json-validation-message {
+    border-radius: 3px 3px 0px 0px;
+    border-color: grey;
+    border-width: 3px;
+    background-color: white;
+    padding: 5px;
+  }

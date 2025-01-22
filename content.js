@@ -1,30 +1,49 @@
-document.addEventListener('mouseup', () => {
-    const selectedText = window.getSelection().toString().trim();
-    if (selectedText) {
-      browser.runtime.sendMessage({ action: "validateJSON", text: selectedText })
-        .then(response => {
-          const validationMessage = document.createElement('span');
-          validationMessage.textContent = response.message;
-          validationMessage.style.backgroundColor = response.isValid ? 'green' : 'red';
-          validationMessage.style.color = 'white';
-          validationMessage.style.padding = '2px 5px';
-          validationMessage.style.borderRadius = '3px';
-          validationMessage.style.position = 'absolute';
-          validationMessage.style.zIndex = '9999';
-  
-          const selection = window.getSelection();
-          const range = selection.getRangeAt(0);
-          const rect = range.getBoundingClientRect();
-  
-          validationMessage.style.left = `${rect.right + window.scrollX}px`;
-          validationMessage.style.top = `${rect.top + window.scrollY}px`;
-  
-          document.body.appendChild(validationMessage);
-  
-          setTimeout(() => {
-            document.body.removeChild(validationMessage);
-          }, 3000);
-        });
-    }
+function addCss() {
+  const linkElem = document.createElement('link');
+  linkElem.setAttribute('rel', 'stylesheet');
+  linkElem.setAttribute('href', browser.runtime.getURL('/styles.css'));
+  document.body.append(linkElem);
+}
+
+function addValidationButtons() {
+  const jsonElements = document.querySelectorAll('.highlight-source-json');
+  jsonElements.forEach((element, index) => {
+    const button = document.createElement('button');
+    button.textContent = 'Validate JSON';
+    button.className = 'json-validate-btn';
+    button.dataset.index = index;
+    element.parentNode.insertBefore(button, element);
+
+    const validationMessage = document.createElement('div');
+    validationMessage.className = 'json-validation-message'
+    validationMessage.dataset.index = index;
+    element.parentNode.insertBefore(validationMessage, element);
   });
-  
+}
+
+function validateJSON(text, index) {
+  browser.runtime.sendMessage({ action: "validateJSON", text: text, index: index });
+}
+
+document.addEventListener('click', (event) => {
+  if (event.target.classList.contains('json-validate-btn')) {
+    const index = event.target.dataset.index;
+    const jsonElement = document.querySelectorAll('.highlight-source-json')[index];
+    const jsonText = jsonElement.textContent;
+    validateJSON(jsonText, index);
+  }
+});
+
+addValidationButtons();
+addCss();
+
+browser.runtime.onMessage.addListener((message) => {
+  if (message.action === "validationResult") {
+    console.log(`validationResult: ${JSON.stringify(message)}`);
+    const buttons = document.querySelectorAll('.json-validation-message');
+    const button = buttons[message.index];
+    button.textContent = message.isValid ? "Valid JSON" : `Invalid JSON: ${message.message}`;
+    button.style.backgroundColor = message.isValid ? "#41ce3d" : "#ee3e3e";
+    button.style.color = "white";
+  }
+});
