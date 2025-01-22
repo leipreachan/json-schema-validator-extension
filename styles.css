@@ -7,7 +7,7 @@
   }
 
   .json-validation-message {
-    border-radius: 3px 3px 0px 0px;
+    border-radius: 3px;
     border-color: grey;
     border-width: 3px;
     background-color: white;

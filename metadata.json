@@ -1,0 +1,11 @@
+{
+  "version": { "license": "MPL-2.0" },
+  "categories": { "firefox": ["other"] },
+  "summary": {
+    "en-US": "The extensions allows the user to validate text against a predefined JSON schema"
+    },
+  "requires_payment": false,
+  "homepage": {
+    "en-US": "https://dataiku.com"
+  }
+}

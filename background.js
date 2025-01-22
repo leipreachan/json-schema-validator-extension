@@ -17,10 +17,9 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
       try {
         const schema = JSON.parse(schemaContent)
-        console.log("schema", schema);
-        // const jsonData = JSON.parse(message.text);
+        // console.log("schema", schema);
         const jsonData = message.text;
-        console.log("data", jsonData);
+        // console.log("data", jsonData);
         if (!parser) {
           throw new Error("'schemaSafe' is not loaded yet");
         }
@@ -33,12 +32,13 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
           includeErrors: true,
           allErrors: true
         });
-        const valid = parse(jsonData);
+        const validationResult = parse(jsonData);
+        console.log(validationResult);
 
         browser.tabs.sendMessage(sender.tab.id, {
           action: "validationResult",
-          isValid: valid,
-          message: valid ? "Valid JSON" : ajv.errorsText(validate.errors),
+          isValid: validationResult.valid,
+          message: validationResult.error || "Valid JSON",
           index: message.index
         });
       } catch (error) {
