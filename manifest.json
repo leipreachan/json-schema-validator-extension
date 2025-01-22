@@ -14,7 +14,7 @@
       "storage"
     ],
     "background": {
-      "scripts": ["background.js"],
+      "scripts": ["ajv.min.js", "background.js"],
       "persistent": false
     },
     "content_scripts": [

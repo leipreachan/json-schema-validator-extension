@@ -1,3 +1,5 @@
+const ajv = new Ajv();
+
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "validateJSON") {
     browser.storage.sync.get('schemaPath').then((res) => {
@@ -20,8 +22,9 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
           try {
             console.log(`schema: ${schema}`);
             const jsonData = JSON.parse(message.text);
-            const Ajv = require("ajv");
-            const ajv = new Ajv();
+            if (!Ajv) {
+              throw new Error("Ajv is not loaded yet");
+            }
             const validate = ajv.compile(schema);
             const valid = validate(jsonData);
 
