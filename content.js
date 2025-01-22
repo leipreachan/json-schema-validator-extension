@@ -56,7 +56,7 @@ browser.runtime.onMessage.addListener((message) => {
     const button = buttons[message.index];
     const cd = new Date()
     const cds = `${(""+cd.getHours()).padStart(2, "0")}:${(""+cd.getMinutes()).padStart(2, "0")}:${(""+cd.getSeconds()).padStart(2, "0")}: ` ;
-    button.textContent = cds + (message.isValid ? "Valid JSON" : `Invalid JSON: ${message.message}`);
+    button.textContent = cds + (message.isValid ? "Valid JSON" : message.message);
     button.style.backgroundColor = message.isValid ? "#41ce3d" : "#ee3e3e";
     button.style.color = "white";
   }
